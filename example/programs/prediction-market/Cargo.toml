@@ -1,0 +1,19 @@
+[package]
+name = "prediction-market"
+version = "0.1.0"
+description = "Minimal prediction market settlement example for prediction-market-settlement-skill"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "prediction_market"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.31.0"
