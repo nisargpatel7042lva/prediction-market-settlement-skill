@@ -11,6 +11,9 @@ This is deliberately scoped narrower than a general "how to read a Pyth price" g
 **2. Read the Pyth price account inside the settlement instruction**, not from an off-chain script that then submits a number. Always read on-chain so the value can't be substituted between observation and submission.
 
 ```rust
+// feed_id stored on the Market account must be [u8; 32] (Pyth price feed ID)
+const MAX_STALENESS_SECONDS: u64 = 60; // tune to your market's time sensitivity
+
 pub fn resolve_price_market(ctx: Context<ResolvePriceMarket>) -> Result<()> {
     let price_update = &ctx.accounts.price_update; // Pyth PriceUpdateV2 account
     let clock = Clock::get()?;
@@ -19,8 +22,8 @@ pub fn resolve_price_market(ctx: Context<ResolvePriceMarket>) -> Result<()> {
 
     let price = price_update.get_price_no_older_than(
         &clock,
-        MAX_STALENESS_SECONDS, // e.g. 60 — tune to your market's time sensitivity
-        &ctx.accounts.market.feed_id,
+        MAX_STALENESS_SECONDS, // u64 seconds — get_price_no_older_than requires u64
+        &ctx.accounts.market.feed_id, // [u8; 32]
     )?;
 
     require!(price.conf < MAX_ACCEPTABLE_CONFIDENCE_INTERVAL, MarketError::PriceUncertain);

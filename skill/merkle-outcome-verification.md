@@ -39,7 +39,9 @@ pub fn settle_market(ctx: Context<SettleMarket>, outcome: OutcomeData, proof: Ve
 }
 ```
 
-**4. Leaf encoding must be exact and documented.** A mismatch between how the attestor hashes a leaf off-chain and how the program reconstructs it on-chain is the single most common bug in this pattern. Pin the encoding (field order, byte lengths, hash function — typically `keccak256` or `sha256`) in one shared schema, not duplicated independently in two codebases.
+**4. Domain-separate your leaf hash.** Prefix the leaf data with a unique tag (e.g. `b"outcome_leaf"`) before hashing so an internal tree node can never be submitted as a valid leaf (second-preimage attack). The attestor and on-chain verifier must use the same prefix.
+
+**5. Leaf encoding must be exact and documented.** A mismatch between how the attestor hashes a leaf off-chain and how the program reconstructs it on-chain is the single most common bug in this pattern. Pin the encoding (field order, byte lengths, hash function — typically `keccak256` or `sha256`) in one shared schema, not duplicated independently in two codebases.
 
 ## Common Mistakes
 

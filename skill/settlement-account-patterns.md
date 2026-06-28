@@ -13,6 +13,7 @@ pub struct Market {
     pub resolve_at: i64,
     pub vault: Pubkey,            // PDA holding staked/wagered funds
     pub total_staked: u64,
+    pub feed_id: [u8; 32],        // Pyth price feed ID — only used for price-threshold markets (see pyth-fallback-resolution.md); zero-filled for Merkle-only markets
     pub bump: u8,
 }
 
